@@ -9,19 +9,19 @@ from plotly.subplots import make_subplots
 import io
 import base64
 
-# Set styling for better visualizations
+# Stileinstellungen für bessere Visualisierungen
 plt.style.use('ggplot')
 sns.set_style("whitegrid")
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = 'Arial'
 
-# Define BMW colors - using the official BMW blue
-bmw_blue = '#0166B1'  # Official BMW blue hex code
+# BMW-Farben definieren
+bmw_blue = '#0166B1'
 bmw_light_blue = '#1C69D3'
-bmw_background = '#FFFFFF'  # White background
-bmw_plot_bg = '#F5F5F5'  # Light gray for plot areas
+bmw_background = '#FFFFFF'
+bmw_plot_bg = '#F5F5F5'
 
-# Create the dataset based on the provided table
+# Datensatz erstellen
 data = {
     'Bestellnummer': [12345, 12346, 12347, 12348, 12349],
     'Artikel': ['Getriebe', 'Motoröl', 'Bremsbeläge', 'Reifen', 'Stoßdämpfer'],
@@ -31,17 +31,17 @@ data = {
     'Lieferstatus': ['Ausgeliefert', 'Ausgeliefert', 'Ausgeliefert', 'Ausgeliefert', 'Ausgeliefert']
 }
 
-# Convert to DataFrame
+# In DataFrame umwandeln
 df = pd.DataFrame(data)
 
-# Convert date strings to datetime objects
+# Datumsangaben in Datetime-Objekte umwandeln
 df['Bestelldatum'] = pd.to_datetime(df['Bestelldatum'], format='%d.%m.%Y')
 df['Lieferdatum'] = pd.to_datetime(df['Lieferdatum'], format='%d.%m.%Y')
 
-# Calculate delivery time in days
+# Lieferzeit in Tagen berechnen
 df['Lieferzeit'] = (df['Lieferdatum'] - df['Bestelldatum']).dt.days
 
-# Calculate key metrics
+# Kennzahlen berechnen
 total_orders = len(df)
 total_items = df['Menge'].sum()
 avg_delivery_time = df['Lieferzeit'].mean()
@@ -56,19 +56,19 @@ print(f"Schnellste Lieferung: {fastest_delivery} Tage")
 print(f"Langsamste Lieferung: {slowest_delivery} Tage")
 print()
 
-# Display the DataFrame with delivery time
+# DataFrame mit Lieferzeit anzeigen
 df['Bestelldatum'] = df['Bestelldatum'].dt.strftime('%d.%m.%Y')
 df['Lieferdatum'] = df['Lieferdatum'].dt.strftime('%d.%m.%Y')
 print("=== Bestellungsübersicht mit Lieferzeit ===")
 print(df[['Bestellnummer', 'Artikel', 'Menge', 'Bestelldatum', 'Lieferdatum', 'Lieferzeit', 'Lieferstatus']])
 
-# Create a dashboard with Plotly
+# Dashboard erstellen
 def create_dashboard(df):
-    # Convert dates back to datetime for plotting
+    # Datumsangaben für die Visualisierung zurück in Datetime konvertieren
     df['Bestelldatum'] = pd.to_datetime(df['Bestelldatum'], format='%d.%m.%Y')
     df['Lieferdatum'] = pd.to_datetime(df['Lieferdatum'], format='%d.%m.%Y')
     
-    # Create a subplot figure
+    # Subplot-Figur erstellen
     fig = make_subplots(
         rows=2, cols=2,
         subplot_titles=(
@@ -83,7 +83,7 @@ def create_dashboard(df):
         horizontal_spacing=0.08
     )
     
-    # 1. Bar chart - Order quantity by item type
+    # 1. Balkendiagramm - Bestellmenge nach Artikeltyp
     df_sorted = df.sort_values('Menge', ascending=False)
     fig.add_trace(
         go.Bar(
@@ -95,7 +95,7 @@ def create_dashboard(df):
         row=1, col=1
     )
     
-    # 2. Bar chart - Delivery time by item
+    # 2. Balkendiagramm - Lieferzeit nach Artikeltyp
     fig.add_trace(
         go.Bar(
             x=df['Artikel'],
@@ -106,7 +106,7 @@ def create_dashboard(df):
         row=1, col=2
     )
     
-    # Add average line
+    # Durchschnittslinie hinzufügen
     fig.add_shape(
         type="line",
         x0=-0.5,
@@ -117,7 +117,7 @@ def create_dashboard(df):
         row=1, col=2
     )
     
-    # Annotation for average line
+    # Anmerkung für Durchschnittslinie
     fig.add_annotation(
         x=4,
         y=avg_delivery_time,
@@ -127,7 +127,7 @@ def create_dashboard(df):
         row=1, col=2
     )
     
-    # 3. Line chart - Delivery time over time
+    # 3. Liniendiagramm - Lieferzeit im Zeitverlauf
     df_time_sorted = df.sort_values('Bestelldatum')
     fig.add_trace(
         go.Scatter(
@@ -141,7 +141,7 @@ def create_dashboard(df):
         row=2, col=1
     )
     
-    # Add average line
+    # Durchschnittslinie hinzufügen
     fig.add_shape(
         type="line",
         x0=df_time_sorted['Bestelldatum'].min(),
@@ -152,7 +152,7 @@ def create_dashboard(df):
         row=2, col=1
     )
     
-    # 4. Bar chart - Order volume by date
+    # 4. Balkendiagramm - Bestellvolumen nach Datum
     fig.add_trace(
         go.Bar(
             x=df_time_sorted['Bestelldatum'],
@@ -163,7 +163,7 @@ def create_dashboard(df):
         row=2, col=2
     )
     
-    # Add KPI indicators at the top
+    # KPI-Indikatoren am oberen Rand hinzufügen
     fig.add_annotation(
         x=0.125, y=1.12,
         xref="paper", yref="paper",
@@ -220,9 +220,9 @@ def create_dashboard(df):
         opacity=0.8
     )
     
-    # Update layout with improved colors and ensuring light background
+     # Layout mit verbesserten Farben aktualisieren und hellen Hintergrund sicherstellen
     fig.update_layout(
-        template="plotly_white",  # Force white template
+        template="plotly_white",
         title={
             'text': "BMW Bestell- und Produktionssystem Dashboard",
             'y':0.98,
@@ -240,11 +240,11 @@ def create_dashboard(df):
         font=dict(color='#333333')  # Dark gray for text to ensure visibility
     )
     
-    # Set grid and axis colors for better visibility
+    # Raster- und Achsenfarben für bessere Sichtbarkeit festlegen
     fig.update_xaxes(gridcolor='rgba(211, 211, 211, 0.5)', tickfont=dict(color='#333333'))
     fig.update_yaxes(gridcolor='rgba(211, 211, 211, 0.5)', tickfont=dict(color='#333333'))
     
-    # Add custom labels and styling
+    # Benutzerdefinierte Beschriftungen und Styling hinzufügen
     fig.update_xaxes(title_text="Artikel", row=1, col=1)
     fig.update_yaxes(title_text="Menge (Stk.)", row=1, col=1)
     
@@ -257,10 +257,10 @@ def create_dashboard(df):
     fig.update_xaxes(title_text="Bestelldatum", row=2, col=2)
     fig.update_yaxes(title_text="Menge (Stk.)", row=2, col=2)
     
-    # Convert to HTML and add CSS to force light mode
+    # In HTML konvertieren und CSS hinzufügen, um hellen Modus zu erzwingen
     html_string = fig.to_html()
     
-    # Add meta tag and CSS to force light mode
+    # Meta-Tag und CSS hinzufügen, um den hellen Modus zu erzwingen
     html_string = html_string.replace('<head>', '''<head>
     <meta name="color-scheme" content="light">
     <style>
@@ -279,19 +279,19 @@ def create_dashboard(df):
         }
     </style>''')
     
-    # Save the modified HTML
+    # Modifiziertes HTML speichern
     with open("bmw_dashboard.html", "w", encoding='utf-8') as f:
         f.write(html_string)
     
-    # Display the figure
+    # Figur anzeigen
     fig.show()
     
     return fig
 
-# Generate the dashboard
+# Dashboard generieren
 dashboard = create_dashboard(df)
 
-# Export the data analysis to a text file
+# Datenanalyse in eine Textdatei exportieren
 with open('bmw_data_analysis.txt', 'w', encoding='utf-8') as f:
     f.write("BMW Bestell- und Produktionssystem Datenanalyse\n")
     f.write("==============================================\n\n")
