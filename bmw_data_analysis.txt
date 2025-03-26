@@ -1,0 +1,17 @@
+BMW Bestell- und Produktionssystem Datenanalyse
+==============================================
+
+Kernkennzahlen:
+- Gesamtbestellungen: 5
+- Gesamtartikel: 285
+- Durchschnittliche Lieferzeit: 13.4 Tage
+- Schnellste Lieferung: 8 Tage
+- Langsamste Lieferung: 15 Tage
+
+Bestellübersicht:
+ Bestellnummer     Artikel  Menge Bestelldatum Lieferdatum  Lieferzeit Lieferstatus
+         12345    Getriebe     50   2023-01-01  2023-01-15          14 Ausgeliefert
+         12346     Motoröl    100   2023-01-02  2023-01-10           8 Ausgeliefert
+         12347 Bremsbeläge     25   2023-01-05  2023-01-20          15 Ausgeliefert
+         12348      Reifen     80   2023-01-10  2023-01-25          15 Ausgeliefert
+         12349 Stoßdämpfer     30   2023-01-15  2023-01-30          15 Ausgeliefert
